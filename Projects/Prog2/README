@@ -1,0 +1,112 @@
+-----------------------------------------------------------------
+|		Project 2: PostFix Desk Calculator		|
+-----------------------------------------------------------------
+	By Mackenzie Stroup
+
+
+Objective & Purpose
+--------------------
+	The objective of the porject is to get familiar with user-created stacks class, exception handling, postfix expressions,
+	and working with parsing algrothim.
+	
+	The purpose of the project is to build a program that is able to preform postfix mathications. 
+
+Libraries
+----------
+	#include <iostream> - for c++ directory
+	#include <cstdio> - just incase for exception handling
+	#include <cstdlib> - just incase for exception handling
+	#include <ctype.h> - for isdigit method and isspace method
+
+	
+
+Classes
+--------
+	dc.cpp
+		-dc.cpp is the client file in this project. It is were all of the coding will be done for this project.
+		the code will be broken down into smaller function method in the code, to keep it simple and sweet. 
+	stack.cpp
+		- contains the content of the methods from the stack.h file.
+	stack.h
+		- the outline of a stack, it contains the bare bones of the class.
+
+Methods in Client file
+------------------------
+- main : contains, instations for a stack and string, call to menu method 
+
+- void- Input: no parameters; Takes in a string of chars, sperates the digits and the nondigit(excluding space),
+	 Also checks to see if the digit has nodigits characters before, preforms task. Also checks for _ and sets the
+	following value to a negative. 
+
+- void- Task : parameter stack and string; calls to addPop, subPop, multPop, divPop, remainPop, reverse,
+	print, printTop, printPop, dubPop --based on the nodigit inputs
+
+- void- menu : parameter stack and string; calls both  input 2 times and task. Input before while loop, 
+	parameter with cin(exits on crtl-d), input method in loop with  the task method. 
+
+- void- print(f): parameter stack; prints the whole 
+
+- void- printTop(p): parameter stack; Prints the top value
+
+- void- printPop(n): parameter stack; Prints the top value and pops it from the stack
+
+- void- clear(c): parameter stack; clears the whole stack
+
+- void- reversing(r): parameter stack; reverse the top 2 values with each other. 
+
+- void- dubPop(d): parameter stack; stores the top value and pushes the value onto the stack, creating two same values in the stack.
+
+- int- add: parameter int1 and int2; adds int2 to int1
+
+- int- sub: parameter int1 and int2; substracts int2 by int1
+
+- int- mult: parameter int1 and int2; multiples int2 by int1
+
+- int- divid: parameters int1 and int2; divids int2 by int1
+
+- int- remain: parameters int1 and int2; find the remainer of int2 divided by int1
+
+- void- addPop(+): parameter the stack; sets int1 to the top of the stack, pop, repeat for int2, 
+	call add method as some int, pushes the int onto the stack. 
+
+- void- subPop(-): parameter the stack;sets int1 to the top of the stack, pop, repeat for int2,
+	 call sub method as some int, pushes the int onto the stack.
+
+- void- multPop(*): parameter the stack; sets int1 to the top of the stack, pop, repeat for int2,
+	 call mult method as some int, pushes the int onto the stack.
+
+- void- divPop(/): parameter the stack;sets int1 to the top of the stack, pop, repeat for int2, 
+	call divid method as some int, pushes the int onto the stack.
+
+- void- remainPop(%): parameter the stack; sets int1 to the top of the stack, pop, repeat for int2, 
+	call remain method as some int, pushes the int onto the stack. 
+
+Algorthim
+------------
+	user inputs a postfix equation
+		checks for _ to make for following value a negative, push to stack
+		checks for task before int and preforms those task (stores the task as a string) before pushing value
+		checks for taks after the int or for an int alone. find the length the of the value and push value. 
+		store the tasks following a digit in a string
+	menu;
+		calls the input
+		preforms task 
+		until exit(ctrl -D)	
+
+	Task
+		f- prints stack
+		p- prints top
+		n- print top and pop;
+		r- reverse top
+		c- clears stack
+		d- duplicates top value and pushes it onto the stack.
+		+- adds top two values
+ 		-- substracts top two values
+		/- divides top two values
+		*- multiples top two values
+		%- finds the remainer of the top two values.
+		
+	Note: clear the tasks after each list of stacks is completed.
+	Note: add exceptions when the stack is empty and a task is trying to occur,
+	Note: add exception for when the stack is full and a task needs to occur,
+	Note add exception for when division is occuring. 

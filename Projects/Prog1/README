@@ -1,0 +1,62 @@
+
+				README FILE
+
+Object-Oriented Analysis & Design Discussion
+
+Goal/problemed solved
+	The goal of the program is to be able to have a list of text that can easily be changed with a command letter. 
+	For example, removing, adding, going to the next or pervious line, and print the list. 
+
+All inputs and outputs used by the client program
+	Inputs and outputs of the client file would be the command lines and the files. 
+	The command line arguments will bring in two variables, an integer and array of character. 
+	The integer will hold the size of the array. While the array will hold the client file name at position 0 and the input file name at position 1. 
+	The inputs also include bring in the data from the file, for this the fstream library is needed. 
+	The outputs will consist at the end of the program with the information the Node List being inserted into the same file it came from. 
+
+Outline
+	Classes used
+		In this program the follow libraries will be used, iostream, fstream, string, and cstdlid. Implemented classes will only include the line list class.  
+
+	Classes being implemented.
+		An implemented class for this program would be a doubly linked list for List of Nodes in, called a line list. 
+		For example, this class will include methods for deletion, insertion, moving back, moving forward, the current position number,
+		 the length, going to the top of the list, and going to the bottom of the list and printing the list. 
+
+	Algorithm
+		Libraries and implementation classes will be called, followed by the type name and parameters needed for the methods. 
+		All methods asides from the main will contain a parameter of Node List taking the address of the input. 
+		Both the Menu, Open file, and Save file, will include a parameter for the array of characters, coming from the command line. 
+		
+		Main bring in as command line argument the size of an array, and an array of character. 
+		the variables in the main method consist of the creation of a node list, not contain dynamic memory. 
+		Then a call to the open file method with inputs of the node list, and the array of character. 
+		Followed by a call to the menu method with the same parameters. 
+
+		Method to open file, with a while loop to insert the lines into a node list parameter that takes the input address, to allow changes. 
+
+		Then a menu option of a loop that while something is true it continues asking for input, in this case how to edit the list. 
+		The edit options will be broken down into different methods, for example backline(P), nex Line (N), Print Line(L), Insert(I), and delete Line(d);
+		 all these methods will include a Line List variable taking the address of the input variable, to make consist changes. 
+
+		The Print Line method will have a parameter for the address of a node list. 
+		It will then have a call to the node list method for printing the node. 
+		
+		The Next Line method will have a parameter for the address of a node list. 
+		It will then have a call to the node list method for moving to the next line. 
+		
+		The Back-Line method will have a parameter for the address of a node list.
+		 It will then have a call to the node list method for moving the back, or to the previous line. 
+
+		The Delete Line method will have a parameter for the address of a node list 
+		It will then have a call to the node list method for deletion.
+
+		The Insert method will have parameter for the address of a node list. 
+		It will then have a string variable, and a user input to the string. 
+		A Call to the node list method for inserting a node into the list, using the string as the input.
+
+		The end of the program will occur when the user chooses to type e/E and the data that have be changed by the user, 
+		will be taken to a method to save the new data to the file. 
+
+
+

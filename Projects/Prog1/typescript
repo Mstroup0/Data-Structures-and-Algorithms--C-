@@ -1,0 +1,368 @@
+Script started on Wed 05 Feb 2020 09:26:23 PM EST
+]0;stroup_ma@cobra:~/CSC245/Projects/Prog1[?1034h[stroup_ma@cobra Prog1]$ cat editor.cpp 
+// Created by Mackenzie Stroup
+// 2/7/2020
+// File name: editor.cpp
+// Project 1 : create a basic file editor, with nodes that are doubly circulary 
+//**************************************************************************************
+//**************************************************************************************
+//Brought in files
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+#include "linelist.h"
+using namespace std;
+
+
+//created Methods
+void OpenFile(int argc, char* argv[], LineList& L); // opens the file from the command Line
+void SaveFile(char* argv[], LineList& L); //Saves the file on exit (e/E)
+void backLine(LineList& L); //Moves back a Line (P/p)
+void nextLine(LineList& L); // Moves to next Line (N/n) 
+void PrintLine(LineList& L); // Prints Lines (l/L)
+void Insert(LineList& L); // inserts at location(i/I)
+void deleteLine(LineList& L);// deletes current line(D/d)
+void menu(char* argv[], LineList& L); // editing menu 
+
+//Main method
+int main(int argc, char* argv[]){
+	//Variables
+	LineList list;
+	// opens file from the command line
+	OpenFile( argc, argv, list);
+	// menu and editing options
+	menu(argv,list);
+
+
+	return 0; // end of the program. 
+}
+
+
+// Open file and save to list
+void  OpenFile(int argc, char* argv[], LineList& L)
+{
+// Opens and creates  fstream
+	fstream infile;
+	infile.open(argv[1]);
+//variable for the line of string
+	string s;
+
+//if the file is able to open run this 
+	if(infile.is_open())
+	{
+	// While there is line run
+		while( getline(infile,s))
+		{
+		// if not the end of the file run this
+			if(!infile.eof())
+				L.insertLine(s);
+		}	
+	}
+// file is unable to open receives message 
+	else cout<< "File could not open" << endl;
+
+//Closes file
+	infile.close();
+	
+}
+
+void menu(char* argv[], LineList& L)
+{
+// variable for user control
+	char in;
+//brought in lines are printed
+	PrintLine(L);
+
+//Start of the allow editing and user control
+	cout<< "Start editing" << endl;
+	cout<< L.getCurrLineNum() << "> ";
+	cin >> in ;
+
+	int k =1;
+//Menu loops will k is equal to 1, changes when e/E is typed 
+	while(k =1)
+	{
+
+		if(in == 'I' || in == 'i')
+		{
+			// Insert a insert Line
+			Insert(L);				
+		}
+		else if(in =='L' || in == 'l')
+		{
+			// Prints Line
+			PrintLine(L);
+		}
+		else if(in == 'P' || in == 'p')
+		{
+			// go back a line
+			backLine(L);
+		}
+		else if(in == 'N' || in == 'n')
+		{
+			//go to next line
+			nextLine(L);
+		}
+		else if(in == 'D' || in == 'd')
+		{
+			//Delete current line
+			deleteLine(L);			
+		}
+		else if(in == 'e' || in == 'E' )
+		{
+			SaveFile(argv, L);		
+			break;
+			k==0;
+		}
+		cout << L.getCurrLineNum() << "> ";
+		cin >> in;
+	}
+	
+}
+
+
+// Save to file
+void SaveFile(char* argv[], LineList& L)
+{
+// creates and opens the fstream class and file
+	fstream outfile;
+	outfile.open(argv[1]);	
+
+// goes to the top of the list
+	L.goToTop();
+	string s;// variable for lines
+
+//fills the file from the top of the list to the bottom 
+	while (L.getCurrLine() == " - - - Bottom of file - - - ")	
+	{	
+		s = L.getCurrLine();
+		outfile << s << endl;
+		L.moveNextLine();
+	
+	}
+	outfile.close();// closes the file
+}
+
+//Back a Line
+void backLine(LineList& L)
+{
+	L.movePrevLine();
+
+}
+
+//Next Line (N)
+void nextLine(LineList& L)
+{
+	L.moveNextLine();
+}
+
+// Prints new Line (L)
+void PrintLine(LineList& L)
+{
+	L.printList();			
+}
+
+//Inserts new Line (I)
+void Insert(LineList& L)
+{
+ 
+// Asks for the input
+	string in;
+	cout<< L.getCurrLineNum() << "> "; 
+	cin>> in;
+	
+	L.insertLine(in);
+}
+
+
+//Deletes Line (D)
+void deleteLine(LineList& L)
+{
+	L.deleteLine();	
+}
+]0;stroup_ma@cobra:~/CSC245/Projects/Prog1[stroup_ma@cobra Prog1]$ cat linelist.cpp
+
+#include <iostream>
+#include "linelist.h"
+
+LineList::LineList()
+{
+	LineNode *line = new LineNode;
+	LineNode *line2 = new LineNode;
+
+	line -> info = topMessage;
+	currLine = line;
+	currLineNum = 1;
+	length = 0;
+	line2 -> info = bottomMessage;
+	currLine -> back = NULL;
+	currLine -> next = line2;
+	line2 -> back = line;
+	line2 -> next = NULL;
+}
+
+void LineList::goToTop() 
+{
+	// Post : Advances currLine to line 1
+	while(currLine -> info != topMessage)
+	{
+		currLine=currLine -> back;
+	}
+	currLine =  currLine -> next;
+	currLineNum = 1;
+}
+
+void LineList::goToBottom() 
+{
+	// Post : Advances currLine to last line
+	while(currLine -> info != bottomMessage)
+		currLine = currLine -> next;
+	
+	currLine = currLine -> back;
+	currLineNum = getLength() -1;
+				
+}
+
+void LineList::insertLine(string newLine)
+{
+	// post : newLine has been inserted after the current line
+	if(currLine -> info == bottomMessage)
+		movePrevLine();
+	
+	LineNode *Line =  new LineNode;
+	Line ->info = newLine; 
+	Line -> back = currLine;
+	Line -> next = currLine -> next;
+
+	currLine -> next -> back = Line;
+	currLine -> next = Line;
+	currLine = currLine-> next;
+	
+	length ++;
+	currLineNum++;
+}	
+
+void LineList::deleteLine()
+{
+	// post : deletes the current line leaving currentLine
+	//	  pointing to line following
+	LineNode *Line = new LineNode;
+	LineNode *Line2 = new LineNode;
+	LineNode *del = new LineNode;
+	Line = currLine;
+	Line2 =currLine;	
+
+	if(Line-> next -> info == bottomMessage)
+	{
+		Line = currLine -> next;
+		Line2 = currLine -> back;
+		currLine -> back -> next = Line;
+		currLine = Line2;
+		currLineNum --;
+	}
+	else if(Line -> back->info == topMessage)
+	{
+		Line = currLine -> back;
+		Line2 = currLine -> next;
+		currLine -> next -> back  = Line;
+		currLine = Line2;	
+		currLineNum ++; 
+	}
+	else
+	{
+		Line = currLine -> next;
+		Line2 = currLine -> back;
+		currLine -> back -> next = Line;
+		currLine -> next -> back = Line2;	
+		currLineNum --; 	
+	}	
+	
+	length --;	
+
+}
+
+void LineList::printList() 
+{
+	int lineNum = 1;
+	LineNode *mark = currLine;
+	int markNum = currLineNum;
+
+	goToTop();
+	LineNode *Line = currLine;
+	
+	while(Line -> info != bottomMessage )
+	{
+		cout << lineNum << "> " << Line-> info << endl;
+		Line = Line-> next;	
+		lineNum++;
+		
+	}
+	currLine = mark;
+	currLineNum = markNum;
+
+}
+
+string LineList::getCurrLine() const
+{
+	return (currLine-> info);	
+
+}
+
+void LineList::moveNextLine()
+{
+	// Post : Advances currLine (unless already at last line)
+	if((currLine -> next != NULL) && (currLine-> info != bottomMessage))
+	{
+		currLine = currLine-> next;
+		currLineNum++;
+	}
+
+}
+
+void LineList::movePrevLine()
+{
+	// Post : Advances currLine (unless already at last line)
+	if((currLine->back != NULL) && (currLine->info != topMessage))
+	{
+		currLine = currLine -> back;
+		currLineNum --;
+	}
+}
+
+int LineList::getCurrLineNum() const
+{
+	return (currLineNum -1);
+
+}
+
+int LineList::getLength() const
+{
+	return length;
+}
+]0;stroup_ma@cobra:~/CSC245/Projects/Prog1[stroup_ma@cobra Prog1]$ cat linelist.cpp[1Peditor.cpp exit[Kvim linelist.cppcd CSC245/Projects/Prog1/[10Pvim editor.cpp ls[Kcd CSC245/Projects/Prog1/exit[Kvim linelist.cpp[4Plinelist.cpps[Kcd CSC245/Projects/Prog1/exit[Kcat testfile[4@./a.ou[C[C[C[C[C[C[C[C[C[Cc++ editor.cpp linelist.o[6P-c linelist.cpp
+]0;stroup_ma@cobra:~/CSC245/Projects/Prog1[stroup_ma@cobra Prog1]$ c++ -c linelist.cpp[3Pat[C[C[C[C[C[C[C[C[C[C[C[C[C[1Peditor.cpp exit[Kvim linelist.cppcd CSC245/Projects/Prog1/[10Pvim editor.cpp ls[Kcd CSC245/Projects/Prog1/exit[Kvim linelist.cpp[4Plinelist.cpps[Kcd CSC245/Projects/Prog1/exit[Kcat testfile[4@./a.ou[C[C[C[C[C[C[C[C[C[Cc++ editor.cpp linelist.o
+]0;stroup_ma@cobra:~/CSC245/Projects/Prog1[stroup_ma@cobra Prog1]$ c++ editor.cpp linelist.o[6P-c linelist.cpp[3Pat[C[C[C[C[C[C[C[C[C[C[C[C[C[1Peditor.cpp exit[Kvim linelist.cppcd CSC245/Projects/Prog1/[10Pvim editor.cpp ls[Kcd CSC245/Projects/Prog1/exit[Kvim linelist.cpp[4Plinelist.cpps[Kcd CSC245/Projects/Prog1/exit[Kcat testfile[4@./a.ou[C[C[C[C[C[C[C[C[C[C
+1> This is my first line. 
+2> this is my second line.
+3> this is my third line. 
+Start editing
+3> p
+2> i
+2> Hi
+3> l
+1> This is my first line. 
+2> this is my second line.
+3> Hi
+4> this is my third line. 
+3> n
+4> d
+3> d
+2> l
+1> This is my first line. 
+2> this is my second line.
+2> e
+]0;stroup_ma@cobra:~/CSC245/Projects/Prog1[stroup_ma@cobra Prog1]$ exit
+exit
+
+Script done on Wed 05 Feb 2020 09:28:11 PM EST
